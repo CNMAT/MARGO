@@ -1,6 +1,6 @@
 # Bill of Materials
 
-Our first prototype, built in October 2022, uses the following items sourced from Adafruit and Mouser.  These items just happened to be on hand when we started this project. The ESP32-Devkit C - .  Persons intending to replicate this functionality may choose to attempt to use one of Adafruit's excellent ESP32 variants.  The Feather, for example, has built-in lipo battery charging, so one could forego the Micro-Lipo charger.  That said, we have encountered some snags using Feather with I2C in the past, so the code may need to be tweaked slightly in order to work.
+Our first prototype, built in October 2022, uses the following items sourced from Adafruit and Mouser.  These items just happened to be on hand when we started this project. The ESP32-Devkit C - 32UE has a nice external antenna that we liked for use in wearables. However, the code should work with other ESP32 variants.  Persons intending to replicate this functionality may choose, for example, to attempt to use one of Adafruit's excellent ESP32 variants.  The [Feather](https://www.adafruit.com/product/5000) series has built-in lipo battery charging, so one could forego the Micro-Lipo charger.  That said, we have encountered some snags using Feather with I2C in the past, so the code may need to be tweaked slightly in order to work.
 
 
 Shopping list:
