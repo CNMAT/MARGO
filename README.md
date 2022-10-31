@@ -23,7 +23,7 @@ The MARGO also accepts OSC messages for configuration on the fly:
 - /calibrate : {null}  --- reset the orientation quaternion to [1,0,0,0] and re-initialize related parameters
 
 # Getting Started
-0. Obtain an ESP32 and a LSM6DS3 + LIS3MDL magnetic, angular rate and gravity (MARG) sensor.  See the [BOM.md](hardware/BOM.md) for a complete listing of components.  You will also need:
+0. Obtain an ESP32 and a LSM6DS3 + LIS3MDL magnetic, angular rate and gravity (MARG) sensor.  See the [BOM.md](/hardware/BOM.md) for a complete listing of components.  You will also need:
     - The Arduino IDE
     - Max (available from Cycling74.com)
     - CNMAT's ODOT package (in Max, go to File > Show Package Manager > search odot, click on "odot" then install. Restart Max.)
