@@ -1,6 +1,6 @@
 # Connecting everything
 
-There are lots of ways of connecting up the individual bits of hardware, but here is how we did it.  For the prototype, we soldered pin-headers to all of the boards and used F/F jumper wires.  The end user may wish to solder these connections on a prototyping board:
+There are lots of ways of connecting up the individual bits of hardware, but here is how we did it.  For the prototype, we soldered pin-headers to all of the boards and used F/F jumper wires to connect them.  The end user may wish to solder these connections on a prototyping board:
 
 | Hardware | Pin | Connect to | Hardware | Pin |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
@@ -12,5 +12,7 @@ There are lots of ways of connecting up the individual bits of hardware, but her
 | Micro-Lipo | GND | >>>>>> | ESP32    | GND |
 
 (Plug battery into lipo port on Micro-Lipo)
+
+For a complete listing of hardware, see the [BOM.md](BOM.md) in this directory.
 
 
