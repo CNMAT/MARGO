@@ -29,7 +29,7 @@ The MARGO also accepts OSC messages for configuration on the fly:
     - CNMAT's ODOT package (in Max, go to File > Show Package Manager > search odot, click on "odot" then install. Restart Max.)
 1. Download this repo to your computer.  We recommend using GitHub desktop if you are uncomfortable with git.
     - Be sure to occasionally fetch changes to keep up with latest updates.
-2. Connect the LSM6DS3 + LIS3MDL sensor to the ESP32 (see also [Connections](Hardware/Connections.md):
+2. Connect the LSM6DS3 + LIS3MDL sensor to the ESP32 (see also [Connections](Hardware/Connections.md)):
     - Connect 3V3 pin on sensor to 3V3 pin on ESP32
     - Connect GND pin on sensor to GND pin on ESP32
     - Connect CLK pin on sensor to CLK pin (pin 22) on ESP32
