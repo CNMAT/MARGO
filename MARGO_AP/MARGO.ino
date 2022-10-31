@@ -95,7 +95,7 @@ struct madgwickFilter {
 } madgwickFilter;
 
 // Replace with your desired network credentials; this ESP32 will function as an AP
-const char* ssid = "CNMAT-MARGO-1";
+const char* ssid = "CNMAT-MARGO-5";
 const char* password = "123456789";
 
 #define UDP_TX_PACKET_MAX_SIZE 8192
