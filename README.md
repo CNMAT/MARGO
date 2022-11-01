@@ -62,3 +62,5 @@ The MARGO also accepts OSC messages for configuration on the fly:
     
 5. Open the 00_MARGO_START_HERE.maxpat
   - By default, the MARGO sketch will begin sending OSC packets to the IP address of the last message it recieved, so we just need to send it a packet--any packet--to get it sending sensor values to our Max patch.
+
+In our early tests, the MARGO_AP configuration was able to run between 4-8 hours on a single charge of the 1200 mAh LiPoly battery.  Your results may vary depending on choice of battery and loop frequency.  
