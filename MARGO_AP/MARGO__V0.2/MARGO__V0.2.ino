@@ -38,8 +38,10 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <OSCBundle.h>
 #include <OSCTiming.h>
 #include <Wire.h>
-#include <Adafruit_LIS3MDL.h>
-#include <Adafruit_LSM6DS3TRC.h>
+//#include <Adafruit_LIS3MDL.h>
+#include <Adafruit_LIS3DH.h>
+//#include <Adafruit_LSM6DS3TRC.h>
+#include <Adafruit_LSM6DSOX.h>
 #include <Adafruit_Sensor.h>
 #include <MadgwickAHRS.h>
 
@@ -52,9 +54,10 @@ float psi, theta, phi;  //for Euler angles, yaw, roll, pitch, respectively
 #define beta sqrt(3.0f / 4.0f) * gyroMeasError            //compute beta
 #define zeta sqrt(3.0f / 4.0f) * gyroMeasDrift            //compute zeta
 
-Adafruit_LSM6DS3TRC lsm6ds3trc;
+//Adafruit_LSM6DS3TRC lsm6ds3trc;
+Adafruit_LSM6DSOX lsm6dsox;
 
-Adafruit_LIS3MDL lis3mdl;
+Adafruit_LIS3DH lis3dh;
 //#define LIS3MDL_CLK 13
 //#define LIS3MDL_MISO 12
 //#define LIS3MDL_MOSI 11
@@ -95,7 +98,7 @@ struct madgwickFilter {
 } madgwickFilter;
 
 // Replace with your desired network credentials; this ESP32 will function as an AP
-const char* ssid = "CNMAT-MARGO-5";
+const char* ssid = "CNMAT-MARGO-4";
 const char* password = "123456789";
 
 #define UDP_TX_PACKET_MAX_SIZE 8192
@@ -139,19 +142,19 @@ void setup() {
   Serial.println(localPort);
 
   //set up the LSM6DS3 IMU
-  if (!lsm6ds3trc.begin_I2C()) {
+  if (!lsm6dsox.begin_I2C(0x6B)) {
     // if (!lsm6ds3trc.begin_SPI(LSM_CS)) {
     // if (!lsm6ds3trc.begin_SPI(LSM_CS, LSM_SCK, LSM_MISO, LSM_MOSI)) {
-    Serial.println("Failed to find LSM6DS3TR-C chip");
+    Serial.println("Failed to find LSM6DSOX chip");
     while (1) {
       delay(10);
     }
   }
-  Serial.println("LSM6DS3TR-C Found!");
+  Serial.println("LSM6DSOX Found!");
 
   // lsm6ds3trc.setAccelRange(LSM6DS_ACCEL_RANGE_2_G);
   Serial.print("Accelerometer range set to: ");
-  switch (lsm6ds3trc.getAccelRange()) {
+  switch (lsm6dsox.getAccelRange()) {
     case LSM6DS_ACCEL_RANGE_2_G:
       Serial.println("+-2G");
       break;
@@ -168,7 +171,7 @@ void setup() {
 
   // lsm6ds3trc.setGyroRange(LSM6DS_GYRO_RANGE_250_DPS);
   Serial.print("Gyro range set to: ");
-  switch (lsm6ds3trc.getGyroRange()) {
+  switch (lsm6dsox.getGyroRange()) {
     case LSM6DS_GYRO_RANGE_125_DPS:
       Serial.println("125 degrees/s");
       break;
@@ -190,7 +193,7 @@ void setup() {
 
   // lsm6ds3trc.setAccelDataRate(LSM6DS_RATE_12_5_HZ);
   Serial.print("Accelerometer data rate set to: ");
-  switch (lsm6ds3trc.getAccelDataRate()) {
+  switch (lsm6dsox.getAccelDataRate()) {
     case LSM6DS_RATE_SHUTDOWN:
       Serial.println("0 Hz");
       break;
@@ -228,7 +231,7 @@ void setup() {
 
   // lsm6ds3trc.setGyroDataRate(LSM6DS_RATE_12_5_HZ);
   Serial.print("Gyro data rate set to: ");
-  switch (lsm6ds3trc.getGyroDataRate()) {
+  switch (lsm6dsox.getGyroDataRate()) {
     case LSM6DS_RATE_SHUTDOWN:
       Serial.println("0 Hz");
       break;
@@ -264,66 +267,62 @@ void setup() {
       break;
   }
 
-  lsm6ds3trc.configInt1(false, false, true);  // accelerometer DRDY on INT1
-  lsm6ds3trc.configInt2(false, true, false);  // gyro DRDY on INT2
+  lsm6dsox.configInt1(false, false, true);  // accelerometer DRDY on INT1
+  lsm6dsox.configInt2(false, true, false);  // gyro DRDY on INT2
 
   //now set up the Magnetometer
-  if (!lis3mdl.begin_I2C()) {
-    Serial.println("Failed to find LIS3MDL chip");
+  if (!lis3dh.begin(0x19)) {
+    Serial.println("Failed to find LIS3DH chip");
     while (1) { delay(10); }
   }
-  Serial.println("LIS3MDL Found!");
+  Serial.println("LIS3DH Found!");
 
-  lis3mdl.setPerformanceMode(LIS3MDL_MEDIUMMODE);
-  Serial.print("Performance mode set to: ");
-  switch (lis3mdl.getPerformanceMode()) {
-    case LIS3MDL_LOWPOWERMODE: Serial.println("Low"); break;
-    case LIS3MDL_MEDIUMMODE: Serial.println("Medium"); break;
-    case LIS3MDL_HIGHMODE: Serial.println("High"); break;
-    case LIS3MDL_ULTRAHIGHMODE: Serial.println("Ultra-High"); break;
-  }
+  // lis3dh.setPerformanceMode() setPerformanceMode(LIS3DH_MEDIUMMODE);
+  // Serial.print("Performance mode set to: ");
+  // switch (lis3dh.getPerformanceMode()) {
+  //   case LIS3DH_ LOWPOWERMODE: Serial.println("Low"); break;
+  //   case LIS3DH_MEDIUMMODE: Serial.println("Medium"); break;
+  //   case LIS3DH_HIGHMODE: Serial.println("High"); break;
+  //   case LIS3DH_ULTRAHIGHMODE: Serial.println("Ultra-High"); break;
+  // }
 
-  lis3mdl.setOperationMode(LIS3MDL_CONTINUOUSMODE);
-  Serial.print("Operation mode set to: ");
-  // Single shot mode will complete conversion and go into power down
-  switch (lis3mdl.getOperationMode()) {
-    case LIS3MDL_CONTINUOUSMODE: Serial.println("Continuous"); break;
-    case LIS3MDL_SINGLEMODE: Serial.println("Single mode"); break;
-    case LIS3MDL_POWERDOWNMODE: Serial.println("Power-down"); break;
-  }
+  // lis3dh.setOperationMode(LIS3DH_CONTINUOUSMODE );
+  // Serial.print("Operation mode set to: ");
+  // // Single shot mode will complete conversion and go into power down
+  // switch (lis3dh.getOperationMode()) {
+  //   case LIS3MDL_CONTINUOUSMODE: Serial.println("Continuous"); break;
+  //   case LIS3MDL_SINGLEMODE: Serial.println("Single mode"); break;
+  //   case LIS3MDL_POWERDOWNMODE: Serial.println("Power-down"); break;
+  // }
 
-  lis3mdl.setDataRate(LIS3MDL_DATARATE_155_HZ);
+  lis3dh.setDataRate(LIS3DH_DATARATE_200_HZ);
   // You can check the datarate by looking at the frequency of the DRDY pin
   Serial.print("Data rate set to: ");
-  switch (lis3mdl.getDataRate()) {
-    case LIS3MDL_DATARATE_0_625_HZ: Serial.println("0.625 Hz"); break;
-    case LIS3MDL_DATARATE_1_25_HZ: Serial.println("1.25 Hz"); break;
-    case LIS3MDL_DATARATE_2_5_HZ: Serial.println("2.5 Hz"); break;
-    case LIS3MDL_DATARATE_5_HZ: Serial.println("5 Hz"); break;
-    case LIS3MDL_DATARATE_10_HZ: Serial.println("10 Hz"); break;
-    case LIS3MDL_DATARATE_20_HZ: Serial.println("20 Hz"); break;
-    case LIS3MDL_DATARATE_40_HZ: Serial.println("40 Hz"); break;
-    case LIS3MDL_DATARATE_80_HZ: Serial.println("80 Hz"); break;
-    case LIS3MDL_DATARATE_155_HZ: Serial.println("155 Hz"); break;
-    case LIS3MDL_DATARATE_300_HZ: Serial.println("300 Hz"); break;
-    case LIS3MDL_DATARATE_560_HZ: Serial.println("560 Hz"); break;
-    case LIS3MDL_DATARATE_1000_HZ: Serial.println("1000 Hz"); break;
+  switch (lis3dh.getDataRate()) {
+    case LIS3DH_DATARATE_1_HZ: Serial.println("1 Hz"); break;
+    case LIS3DH_DATARATE_10_HZ: Serial.println("10 Hz"); break;
+    case LIS3DH_DATARATE_25_HZ: Serial.println("25 Hz"); break;
+    case LIS3DH_DATARATE_50_HZ: Serial.println("50 Hz"); break;
+    case LIS3DH_DATARATE_100_HZ: Serial.println("100 Hz"); break;
+    case LIS3DH_DATARATE_200_HZ: Serial.println("200 Hz"); break;
+    case LIS3DH_DATARATE_400_HZ: Serial.println("400 Hz"); break;
+
   }
 
-  lis3mdl.setRange(LIS3MDL_RANGE_4_GAUSS);
+  lis3dh.setRange(LIS3DH_RANGE_4_G);
   Serial.print("Range set to: ");
-  switch (lis3mdl.getRange()) {
-    case LIS3MDL_RANGE_4_GAUSS: Serial.println("+-4 gauss"); break;
-    case LIS3MDL_RANGE_8_GAUSS: Serial.println("+-8 gauss"); break;
-    case LIS3MDL_RANGE_12_GAUSS: Serial.println("+-12 gauss"); break;
-    case LIS3MDL_RANGE_16_GAUSS: Serial.println("+-16 gauss"); break;
+  switch (lis3dh.getRange()) {
+    case LIS3DH_RANGE_2_G : Serial.println("+-2 gauss"); break;
+    case LIS3DH_RANGE_4_G : Serial.println("+-4 gauss"); break;
+    case LIS3DH_RANGE_8_G : Serial.println("+-8 gauss"); break;
+    case LIS3DH_RANGE_16_G : Serial.println("+-16 gauss"); break;
   }
 
-  lis3mdl.setIntThreshold(500);
-  lis3mdl.configInterrupt(false, false, true,  // enable z axis
-                          true,                // polarity
-                          false,               // don't latch
-                          true);               // enabled!
+  //lis3dh.setIntThreshold(500);
+  // lis3dh.configInterrupt(false, false, true,  // enable z axis
+  //                         true,                // polarity
+  //                         false,               // don't latch
+  //                         true);               // enabled!
 
   //now set some values for use with madgwick filter
   filter.begin(25);
@@ -357,22 +356,22 @@ void loop() {
 
   OSCBundle bndl;
   uint64_t timetag;
-  lis3mdl.read();
+  lis3dh.read();
   bndl.add("/test").add(val++);
   //bndl.add("/test/time").add(timetag);
   bndl.add("/millis").add((int)millis());
 
 
-  bndl.add("/Mag_XYZ").add(lis3mdl.x).add(lis3mdl.y).add(lis3mdl.z);
+  bndl.add("/Mag_XYZ").add(lis3dh.x).add(lis3dh.y).add(lis3dh.z);
   sensors_event_t event;
-  lis3mdl.getEvent(&event);
+  lis3dh.getEvent(&event);
   bndl.add("/uTesla_XYZ").add(event.magnetic.x).add(event.magnetic.y).add(event.magnetic.z);
 
   // Get a new normalized sensor event
   sensors_event_t accel;
   sensors_event_t gyro;
   sensors_event_t temp;
-  lsm6ds3trc.getEvent(&accel, &gyro, &temp);
+  lsm6dsox.getEvent(&accel, &gyro, &temp);
   //float gyroX = convertRawGyro(gyro.gyro.x);
   //float gyroY = convertRawGyro(gyro.gyro.y);
   //float gyroZ = convertRawGyro(gyro.gyro.z);
@@ -430,7 +429,7 @@ void loop() {
   //for (int i = 0; i < 100; i++) {
     now_time = micros() / 1000000.0f;
     //deltat = now_time - prev_time;
-    filterUpdate(gyro.gyro.x, gyro.gyro.y, gyro.gyro.z, accel.acceleration.x, accel.acceleration.y, accel.acceleration.z, lis3mdl.x, lis3mdl.y, lis3mdl.z);
+    filterUpdate(gyro.gyro.x, gyro.gyro.y, gyro.gyro.z, accel.acceleration.x, accel.acceleration.y, accel.acceleration.z, lis3dh.x, lis3dh.y, lis3dh.z);
     prev_time = now_time;
   //}
 
@@ -529,7 +528,7 @@ float convertRawAcceleration(int aRaw) {
   // -2 g maps to a raw value of -32768
   // +2 g maps to a raw value of 32767
 
-  float a = (aRaw * lsm6ds3trc.getAccelRange()) / 32768.0;
+  float a = (aRaw * lsm6dsox.getAccelRange()) / 32768.0;
   return a;
 }
 
@@ -540,7 +539,7 @@ float convertRawGyro(int gRaw) {
   //find range setting
 
   float a;
-  switch (lsm6ds3trc.getGyroRange()) {
+  switch (lsm6dsox.getGyroRange()) {
     case LSM6DS_GYRO_RANGE_125_DPS:
       a = 125.0;
       break;
