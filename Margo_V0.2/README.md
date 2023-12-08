@@ -17,4 +17,5 @@ Mounted to ESP32-DevKit-C, charging cable attached
 * Include a voltage divider to monitor battery charge via ADC pins.
 * Consolidate onto single board with ESP32-WROOM-32U
 * Relocate battery connector
-* Consider flipping board for back-to-back mounting. 
+* Consider flipping board for back-to-back mounting.
+* Need to Improve Magnetometer Calibration for Hard and Soft Iron distortion.
