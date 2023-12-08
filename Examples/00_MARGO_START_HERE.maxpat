@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 3,
-			"revision" : 1,
+			"minor" : 5,
+			"revision" : 4,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ -36.0, -970.0, 1504.0, 816.0 ],
+		"rect" : [ 34.0, 100.0, 1504.0, 816.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -45,7 +45,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 901.0, 141.0, 453.0, 261.0 ],
+					"patching_rect" : [ 901.0, 141.0, 455.0, 261.0 ],
 					"text" : "The CNMAT MARGO implements an affordable gesture control platform using an ESP32 and Inertial Measurement Unit (IMU) with Magnetometer connected over I2C. The examples in this project illustrate ways to set up wireless networking functionality on the ESP32, how to access sensor data on connected I2C devices, how to process that data and transmit it to a network client as an OSC bundle. The MARGO.ino file allows the end user to set up the ESP32 as a named wireless access point. After connecting to this AP and transmitting any message to it via broadcast UDP, the MARGO will automatically begin sending its data stream to the IP address from which the request was initiated.\n\nThis example was developed with the LSM6DS3 + LIS3MDL magnetic, angular rate and gravity (MARG) sensor. Popular versions of this sensor incorporate a thermometer, thereby offering 10 degrees of freedom. Sensor integration is accomplished via an implementation of Sebastian Madgwick's gradient descent orientation filter, which yeilds a stable quaternion orientation from which is derived the orientation in Euler angles. Raw values of the sensor data, as well as the quaternion and Euler angles are transmitted as an OSC bundle.\n\nVersion 1.0 Jeremy Wagner, October 2022"
 				}
 
@@ -115,7 +115,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 1294.399999999999864, 621.5, 226.0, 33.0 ],
-					"presentation_linecount" : 3,
 					"text" : "Euler angles (pitch, roll, yaw) based on Madgwick filter quaternion (radians)"
 				}
 
@@ -315,14 +314,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 3,
-							"revision" : 1,
+							"minor" : 5,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 59.0, 106.0, 640.0, 480.0 ],
+						"rect" : [ 59.0, 106.0, 1081.0, 480.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -497,8 +496,61 @@
 								}
 
 							}
+, 							{
+								"box" : 								{
+									"attr" : "gl_color",
+									"id" : "obj-1",
+									"maxclass" : "attrui",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 362.0, 301.0, 150.0, 22.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"attr" : "gl_color",
+									"id" : "obj-2",
+									"maxclass" : "attrui",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 515.0, 301.0, 150.0, 22.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"attr" : "shader",
+									"id" : "obj-3",
+									"maxclass" : "attrui",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 668.0, 301.0, 150.0, 22.0 ]
+								}
+
+							}
  ],
 						"lines" : [ 							{
+								"patchline" : 								{
+									"destination" : [ "obj-65", 0 ],
+									"source" : [ "obj-1", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-65", 0 ],
+									"source" : [ "obj-2", 0 ]
+								}
+
+							}
+, 							{
 								"patchline" : 								{
 									"destination" : [ "obj-25", 0 ],
 									"source" : [ "obj-20", 0 ]
@@ -537,6 +589,13 @@
 								"patchline" : 								{
 									"destination" : [ "obj-30", 0 ],
 									"source" : [ "obj-25", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-65", 0 ],
+									"source" : [ "obj-3", 0 ]
 								}
 
 							}
@@ -1150,13 +1209,11 @@
 				"box" : 				{
 					"fontface" : 0,
 					"id" : "obj-14",
-					"linecount" : 10,
 					"maxclass" : "o.display",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 461.0, 240.0, 335.0, 149.0 ],
-					"text" : "/test : 2235,\n/millis : 80366,\n/Mag_XYZ : [-298, 118, -5052],\n/uTesla_XYZ : [-4.35545, 1.72464, -73.8381],\n/temp : 26.4766,\n/accel : [-4.15873, -0.00957129, -9.08674],\n/gyro : [0.00855211, -0.031765, 0.00366519],\n/Madgwick : [0.963154, -0.034022, -0.209586, -0.165076],\n/Euler : [0.369593, 0.403342, 0.147016]"
+					"patching_rect" : [ 461.0, 240.0, 335.0, 33.0 ]
 				}
 
 			}
@@ -1237,7 +1294,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 101.0, 240.0, 323.0, 149.0 ],
-					"text" : "/test : 9756,\n/millis : 315863,\n/Mag_XYZ : [143, 4810, -5263],\n/uTesla_XYZ : [2.09003, 70.3011, -76.922],\n/temp : 25.,\n/accel : [-0.497707, 9.71007, 1.89272],\n/gyro : [0.00855211, -0.0268781, -0.00244346],\n/Madgwick : [0.628262, -0.766822, 0.0837269, -0.101299],\n/Euler : [1.76894, -0.263603, -0.00116298]"
+					"text" : "/test : 1599,\n/millis : 170755,\n/Mag_XYZ : [-64, -1376, 9008],\n/uTesla_XYZ : [-0.0784532, -1.68674, 11.0423],\n/temp : 51.8828,\n/accel : [0.510868, 1.69053, -14.3545],\n/gyro : [0.00610865, 0.00366519, -0.00977384],\n/Madgwick : [0.928193, -0.0488857, 0.0372911, -0.366984],\n/Euler : [0.0637766, -0.105302, 0.749663]"
 				}
 
 			}

@@ -361,7 +361,6 @@ void loop() {
   //bndl.add("/test/time").add(timetag);
   bndl.add("/millis").add((int)millis());
 
-  
 
   bndl.add("/Mag_XYZ").add(lis3dh.x).add(lis3dh.y).add(lis3dh.z);
   sensors_event_t event;
@@ -465,8 +464,6 @@ void calibrate(OSCMessage& msg){
   madgwickFilter.b_x = 1.0f;
   madgwickFilter.b_z = 0.0f;
   madgwickFilter.w_bx = madgwickFilter.w_by = madgwickFilter.w_bz;
-
-  //TODO: add a Mag calibration for hard and soft iron 
 }
 
 void setDestPort(OSCMessage& msg) {
